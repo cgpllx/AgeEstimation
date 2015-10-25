@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.konka.ageestimation.ui.widget.AgeIndicatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_indicator"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="@dimen/indicator_width"
+        android:layout_height="@dimen/indicator_height"
+        android:gravity="center"
+        android:paddingBottom="5dp" >
+
+        <ImageView
+            android:id="@+id/iv_ageindicator_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_gender_female" />
+
+        <TextView
+            android:id="@+id/tv_ageindicator_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:text="17"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+</com.konka.ageestimation.ui.widget.AgeIndicatorLayout>
