@@ -156,13 +156,31 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 				int[] results = KonkaSo.FaceDetect(Files.bitmap2intArray(bitmap), modelpath, bitmap.getWidth(), bitmap.getHeight());
 				float[] results_age = KonkaSo.AgeGenderEstimate(Files.bitmap2intArray(bitmap), modelpath, bitmap.getWidth(), bitmap.getHeight());
 				List<Face> faceList = new ArrayList<>();
+				int array_resultslength = results_age.length;
+				int ageAndSexCount = 0;
 
-				if (results != null && results.length % 4 == 0 && results_age != null & results_age.length % 2 == 0) {
+				for (int i = 0; i < array_resultslength; i++) {
+					System.out.println("results_age[" + i + "]=" + results_age[i]);
+				}
+				if (results_age != null && array_resultslength > 1) {
+					int facecount = (int) results_age[0];
+					System.out.println("facecount" + facecount);
+					System.out.println("results_age[0]" + results_age[0]);
+					System.out.println("array_resultslength" + array_resultslength);
+					System.out.println("facecount << 1" + (facecount << 1));
+					System.out.println("facecount << 1" + ((facecount << 1) + 1));
+					System.out.println("facecount << 1" + (facecount << 1 + 1));
+					if (array_resultslength >= ((facecount << 1) + 1)) {// 数据格式正确
+						ageAndSexCount = facecount;
+					}
+				}
+
+				if (results != null && results.length % 4 == 0) {
 					int count = results.length / 4;
-					int agecount = results_age.length / 2;
+					// int agecount = results_age.length / 2;
 					System.out.println(count);
 					System.out.println("count====" + count);
-					System.out.println("agecount===" + agecount);
+					System.out.println("agecount===" + ageAndSexCount);
 					// if (agecount < count) {// 保证两个数据一致
 					// sub.onError(new Exception("返回数据格式错误"));
 					// return;
@@ -175,9 +193,9 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 						int w = results[index + 2];
 						int h = results[index + 3];
 
-						int ageIndex = i * 2 % agecount;
-						float age = results_age[ageIndex];
-						float sex = results_age[ageIndex + 1];
+						int ageIndex = i * 2 % ageAndSexCount;
+						float age = results_age[ageIndex + 1];
+						float sex = results_age[ageIndex + 2];
 						Face face = new Face();
 						face.faceRectangle.height = h;
 						face.faceRectangle.width = w;
@@ -223,7 +241,6 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 		// myObservable .subscribeOn(Schedulers.io());
 
 	}
-
 
 	private void parserJson(String string) {
 		if (string == null) {
