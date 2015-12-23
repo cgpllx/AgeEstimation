@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
  
 public interface IAnalysePresenter {
 //	public void doAnalyse(String imgPath);
-    public void doAnalyse(Context context,Bitmap bitmap);
+    public void doAnalyse(Context context,Bitmap bitmap,String imgPath);
     public void pickPhoto(Activity activity,int type);
     public void getImage(Context context,Intent intent);
 }

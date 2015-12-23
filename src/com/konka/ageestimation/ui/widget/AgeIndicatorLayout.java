@@ -65,6 +65,7 @@ public class AgeIndicatorLayout extends LinearLayout {
                     TextView tvAge = (TextView) ageIndicateView.findViewById(R.id.tv_ageindicator_age);
                     tvAge.setText(String.valueOf(item.attributes.age1+item.attributes.gender));
                     ImageView ivGender = (ImageView) ageIndicateView.findViewById(R.id.iv_ageindicator_gender);
+                    System.out.println("性别＝"+item.attributes.gender);
                     if (item.attributes.gender==1){
                         ivGender.setImageResource(R.drawable.icon_gende_male);
                     }else if(item.attributes.gender==2){

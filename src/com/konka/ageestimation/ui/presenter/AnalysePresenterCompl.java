@@ -2,9 +2,11 @@ package com.konka.ageestimation.ui.presenter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,6 +33,9 @@ import com.konka.ageestimation.ui.util.FileUtil;
 import com.konka.ageestimation.ui.util.Files;
 import com.konka.ageestimation.ui.view.IPhotoView;
 import com.konka.project.KonkaSo;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class AnalysePresenterCompl implements IAnalysePresenter {
 	private static final String TAG = "AnalysePresenterCompl";
@@ -51,9 +56,18 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 	}
 
 	@Override
-	public void doAnalyse(Context context, Bitmap bitmap) {
-
-		postRequest(context, bitmap);
+	public void doAnalyse(Context context, Bitmap bitmap, String imgPath) {
+		// int mode = ParaSetting.mode.value;
+		// switch (mode) {
+		// case ModeConstant.OFF_LINE:
+		// postRequest(context, bitmap);// 离线识别
+		// break;
+		// case ModeConstant.ON_LINE:
+		postRequest(context, imgPath, bitmap);// 网络识别
+		// break;
+		// }
+		// postRequest(imgPath);
+		// postRequest(context, bitmap);
 
 	}
 
@@ -207,10 +221,14 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 						faceList.add(face);
 
 					}
-					sub.onNext(faceList);
-					sub.onCompleted();
+					if (!sub.isUnsubscribed()) {
+						sub.onNext(faceList);
+						sub.onCompleted();
+					}
 				} else {
-					sub.onError(new Exception("返回数据格式错误"));
+					if (!sub.isUnsubscribed()) {
+						sub.onError(new Exception("返回数据格式错误"));
+					}
 				}
 
 			}
@@ -263,8 +281,7 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 				face.faceRectangle.width = faceRectangle.optInt("width", 65);
 				face.faceRectangle.height = faceRectangle.optInt("height", 65);
 				JSONObject attributes = item.optJSONObject("attributes");
-				// face.attributes.gender = attributes.optString("gender",
-				// "Female");
+				face.attributes.gender = attributes.optString("gender", "Female").equals("Female") ? 2 : 1;
 				face.attributes.age1 = attributes.optInt("age", 17);
 				faceList.add(face);
 			}
@@ -273,6 +290,52 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 		}
 
 		iPhotoView.onGetFaces(faceList);
+	}
+
+	private AsyncHttpClient asyncHttpClient;
+
+	private void postRequest(final Context context, String imagePath, final Bitmap bitmap) {
+		iPhotoView.showProgressDialog(true);
+		try {
+			if (asyncHttpClient == null)
+				asyncHttpClient = new AsyncHttpClient();
+			RequestParams params = new RequestParams();
+			params.put("data", new File(imagePath)); // Upload a File
+			// params.put("data", new Base64InputStream(new
+			// FileInputStream(imagePath),Base64.DEFAULT)); // Upload a File
+			params.put("isTest", "False");
+			Log.d(TAG, "do post ");
+			asyncHttpClient.post("http://how-old.net/Home/Analyze?isTest=False", params, new AsyncHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+					Log.d(TAG, "onSuccess: statusCode = " + statusCode);
+					try {
+						String string = new String(responseBody, "UTF-8");
+						String str1 = string.replaceAll("\\\\", "");
+						String str2 = str1.replaceAll("rn", "");
+						String json = str2.substring(str2.indexOf("\"Faces\":[") + 8, str2.lastIndexOf("]") + 1);
+						Log.d(TAG, "onSuccess: json = " + json);
+						parserJson(json);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+					Log.d(TAG, "onFailure: statusCode = " + statusCode);
+					// parserJson(null);
+					postRequest(context, bitmap);// 离线识别
+				}
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			// parserJson(null);
+			postRequest(context, bitmap);// 离线识别
+		}
+
+		// new PostHandler().execute(imagePath);
 	}
 
 }

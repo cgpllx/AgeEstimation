@@ -32,9 +32,17 @@ public class SharePresenterCompl implements ISharePresenter {
 	public void doShare(Context context, View view) {
 		Bitmap b = BitmapUtil.getViewBitmap(view);
 		if (b!=null){
-			File temp = FileUtil.getTempFile(appBaseDir.getAbsolutePath(),".jpg");
+			File temp=null;
+			try {
+				temp = FileUtil.getTempFile(appBaseDir.getAbsolutePath(),".jpg");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if (temp != null) {
 				BitmapUtil.saveBitmapToSd(b,80,temp.getAbsolutePath());
+			}else{
+				return;
 			}
 			Intent share = new Intent(Intent.ACTION_SEND);
 			share.setType("image/jpeg");

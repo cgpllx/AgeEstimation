@@ -4,11 +4,15 @@
     tools:context=".MainActivity" >
 
 <!--         android:icon="@drawable/ic_launcher" -->
+<!--     <item -->
+<!--         android:id="@+id/action_about" -->
+<!--         android:orderInCategory="99" -->
+<!--         android:title="关于" -->
+<!--         app:showAsAction="ifRoom"/> -->
     <item
-        android:id="@+id/action_about"
+        android:id="@+id/action_setting"
         android:orderInCategory="99"
-        android:title="关于"
-        app:showAsAction="ifRoom"/>
- 
+        android:title="设置"
+        app:showAsAction="never" />
 
 </menu>

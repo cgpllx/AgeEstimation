@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.konka.ageestimation.KonkaApplication;
 import com.konka.ageestimation.R;
 import com.konka.ageestimation.ui.pojo.Face;
 import com.konka.ageestimation.ui.presenter.AnalysePresenterCompl;
@@ -22,11 +21,9 @@ import com.konka.ageestimation.ui.presenter.IAnimationPresenter;
 import com.konka.ageestimation.ui.presenter.IDrawPresenter;
 import com.konka.ageestimation.ui.presenter.ISharePresenter;
 import com.konka.ageestimation.ui.presenter.SharePresenterCompl;
-import com.konka.ageestimation.ui.util.Files;
 import com.konka.ageestimation.ui.view.IPhotoView;
 import com.konka.ageestimation.ui.widget.AgeIndicatorLayout;
 import com.konka.ageestimation.ui.widget.FaceImageView;
-import com.konka.project.KonkaSo;
 
 
 public class MainActivity extends BaseActivity implements IPhotoView, View.OnClickListener {
@@ -66,7 +63,7 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
         analysePresenter = new AnalysePresenterCompl(this);
         drawPresenter = new DrawPresenterCompl(this, this);
         try {
-            getSupportActionBar().setElevation(0);
+//            getSupportActionBar().setElevation(0);
             getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +92,7 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
         faceImageView.setImageBitmap(bitmap);
         this.findViewById(R.id.layout_main_introduce).setVisibility(View.GONE);
         this.findViewById(R.id.layout_main_border).setBackgroundResource(R.color.color_1da4e8);
-        analysePresenter.doAnalyse(this,bitmap);
+        analysePresenter.doAnalyse(this,bitmap,imgPath);
         
     }
 
@@ -139,7 +136,7 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
     public boolean onOptionsItemSelected(MenuItem item) {
     	
     	switch (item.getItemId()) {
-		case R.id.action_about:
+		case R.id.action_setting:
 			about();
 			break;
 		}
@@ -147,7 +144,7 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
     }
 
     private void about() {
-		Intent intent=new Intent(this, AboutActivity.class);
+		Intent intent=new Intent(this, SettingActivity.class);
 		startActivity(intent);
 	}
 

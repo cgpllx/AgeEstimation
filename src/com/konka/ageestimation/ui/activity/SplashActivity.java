@@ -34,7 +34,7 @@ public class SplashActivity extends BaseActivity {
 				try {
 					KonkaApplication app = (KonkaApplication) getApplication();
 					FileUtil.copyResToSdcard(getApplicationContext(), app.getModelPath());
-					System.out.println("超市任务执行完成");
+					 
 					arg0.onNext(true);
 					arg0.onCompleted();
 				} catch (Exception e) {

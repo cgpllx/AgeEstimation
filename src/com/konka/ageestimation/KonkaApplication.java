@@ -6,8 +6,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
-import com.konka.ageestimation.ui.util.FileUtil;
-
 public class KonkaApplication extends Application {
 //	public static final String MODEL_FILE = "/storage/sdcard0/konka";
 //	// 人脸解锁
@@ -24,6 +22,7 @@ public class KonkaApplication extends Application {
 	}
 
 	private void init() {
+//		ParaSetting.ParaUtil.initPrar(getApplicationContext());
 		String filepath = getModelPath();
 //		FileUtil.copyResToSdcard(getApplicationContext(), filepath);
 	}
