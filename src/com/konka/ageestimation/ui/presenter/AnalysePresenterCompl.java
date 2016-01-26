@@ -168,6 +168,9 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 			public void call(Subscriber<? super List<Face>> sub) {
 
 				int[] results = KonkaSo.FaceDetect(Files.bitmap2intArray(bitmap), modelpath, bitmap.getWidth(), bitmap.getHeight());
+
+				System.out.println("人脸数组=" + results.length / 4);
+
 				float[] results_age = KonkaSo.AgeGenderEstimate(Files.bitmap2intArray(bitmap), modelpath, bitmap.getWidth(), bitmap.getHeight());
 				List<Face> faceList = new ArrayList<>();
 				int array_resultslength = results_age.length;
@@ -317,7 +320,8 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 						Log.d(TAG, "onSuccess: json = " + json);
 						parserJson(json);
 					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
+						// e.printStackTrace();
+						postRequest(context, bitmap);// 离线识别
 					}
 				}
 
