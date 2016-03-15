@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.konka.ageestimation.R;
+import com.konka.ageestimation.ui.fragment.UpdateDialogFragment;
 import com.konka.ageestimation.ui.pojo.Face;
 import com.konka.ageestimation.ui.presenter.AnalysePresenterCompl;
 import com.konka.ageestimation.ui.presenter.AnimationPresenterCompl;
@@ -20,7 +21,11 @@ import com.konka.ageestimation.ui.presenter.IAnalysePresenter;
 import com.konka.ageestimation.ui.presenter.IAnimationPresenter;
 import com.konka.ageestimation.ui.presenter.IDrawPresenter;
 import com.konka.ageestimation.ui.presenter.ISharePresenter;
+import com.konka.ageestimation.ui.presenter.IUpdateCallback;
 import com.konka.ageestimation.ui.presenter.SharePresenterCompl;
+import com.konka.ageestimation.ui.presenter.UpdataPresenter;
+import com.konka.ageestimation.ui.util.AppUpGradeManager;
+import com.konka.ageestimation.ui.util.AppUtil;
 import com.konka.ageestimation.ui.view.IPhotoView;
 import com.konka.ageestimation.ui.widget.AgeIndicatorLayout;
 import com.konka.ageestimation.ui.widget.FaceImageView;
@@ -36,7 +41,7 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
 	private ProgressDialog progressDialog;
 	private AgeIndicatorLayout ageIndicatorLayout;
     private View photoContainer;
-
+    UpdataPresenter updataPresenter=new UpdataPresenter();
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,21 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
         injectView();
         setListener();
         init();
+        updataPresenter.update(AppUtil.getVersionCode(this),new IUpdateCallback(){
+
+			@Override
+			public void transmitResult(boolean result) {
+				if(result){
+					new UpdateDialogFragment().show(getSupportFragmentManager(), "update");
+				}
+			}
+
+			@Override
+			public void onFailure() {
+				
+			}
+        	
+        });
 	}
 
     private void injectView(){
@@ -65,7 +85,7 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
         try {
 //            getSupportActionBar().setElevation(0);
             getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
-        } catch (Exception e) {
+        } catch (Exception e) {;
             e.printStackTrace();
         }
         IAnimationPresenter animationPresenter = new AnimationPresenterCompl();

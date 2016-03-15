@@ -3,6 +3,7 @@ package com.konka.ageestimation.ui.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.DisplayMetrics;
 
  
@@ -31,5 +32,15 @@ public class AppUtil {
         }
         String pack = packInfo.packageName;
         return pack;
+    }
+    public static int getVersionCode(Context context) {
+        try {
+            PackageManager e = context.getPackageManager();
+            PackageInfo packageInfo = e.getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (NameNotFoundException var3) {
+            var3.printStackTrace();
+            return 0;
+        }
     }
 }
