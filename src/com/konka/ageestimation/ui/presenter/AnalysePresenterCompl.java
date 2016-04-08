@@ -96,16 +96,17 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 			break;
 		case TYPE_PICK_GALLERY:
 			Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-			pickPhoto.putExtra("crop", "true");// 允许裁剪
+			 pickPhoto.putExtra("crop", "true");// 允许裁剪
 			outputImage = new File(appBaseDir.getAbsolutePath() + File.separator + OUTPUT_IMAGE_JPG);
-			if (!outputImage.exists())
+			if (!outputImage.exists()){
 				try {
 					outputImage.createNewFile();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
 			imageUri = Uri.fromFile(outputImage);
-			// takePicture.putExtra("return-data", false);
+			 pickPhoto.putExtra("return-data", true);
 			pickPhoto.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 			try {
 				activity.startActivityForResult(pickPhoto, MainActivity.ACTIVITY_REQUEST_GALLERY);
@@ -126,7 +127,7 @@ public class AnalysePresenterCompl implements IAnalysePresenter {
 	}
 
 	@Override
-	public void getImage(Context context, Intent intent) {
+	public void getImage(Context context, Intent intent1) {
 		try {
 			Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(imageUri));
 			// 为防止原始图片过大导致内存溢出，这里先缩小原图显示，然后释放原始Bitmap占用的内存

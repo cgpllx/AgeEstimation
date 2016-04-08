@@ -193,8 +193,10 @@ public class MainActivity extends BaseActivity implements IPhotoView, View.OnCli
         switch(requestCode){
             case ACTIVITY_REQUEST_CAMERA:
             case ACTIVITY_REQUEST_GALLERY:
+            	System.out.println("cgp=getImage111---"+resultCode);
+            	System.out.println("cgp=getImagedata---"+data);
                 if(resultCode==RESULT_OK){
-                    analysePresenter.getImage(this,data);
+            		analysePresenter.getImage(this,data);
                 }
                 break;
             default:
